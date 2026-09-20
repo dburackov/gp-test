@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -72,7 +74,9 @@ public class HotelController {
     @Operation(summary = "Добавление списка amenities к отелю")
     @ApiResponse(responseCode = "200", description = "Обновлённая карточка отеля")
     @ApiResponse(responseCode = "404", description = "Отель не найден", content = @io.swagger.v3.oas.annotations.media.Content)
-    public HotelDetailResponse addAmenities(@PathVariable Long id, @RequestBody List<String> amenities) {
+    public HotelDetailResponse addAmenities(
+            @PathVariable Long id,
+            @RequestBody List<@NotBlank @Size(max = 255) String> amenities) {
         return hotelService.addAmenities(id, amenities);
     }
 }

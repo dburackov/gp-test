@@ -11,6 +11,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 public final class HotelSpecifications {
 
+    private static final char ESCAPE_CHAR = '\\';
+
     private HotelSpecifications() {
     }
 
@@ -41,7 +43,7 @@ public final class HotelSpecifications {
             Join<Hotel, Amenity> amenity = hotel.join("amenities");
             subquery.select(builder.literal(1))
                     .where(builder.equal(hotel.get("id"), root.get("id")),
-                            builder.like(builder.lower(amenity.get("name")), pattern));
+                            builder.like(builder.lower(amenity.get("name")), pattern, ESCAPE_CHAR));
             return builder.exists(subquery);
         };
     }
@@ -51,11 +53,16 @@ public final class HotelSpecifications {
             return null;
         }
         String pattern = toPattern(value);
-        return (root, query, builder) -> builder.like(builder.lower(resolver.resolve(root)), pattern);
+        return (root, query, builder) ->
+                builder.like(builder.lower(resolver.resolve(root)), pattern, ESCAPE_CHAR);
     }
 
     private static String toPattern(String value) {
-        return "%" + value.trim().toLowerCase(Locale.ROOT) + "%";
+        String escaped = value.trim().toLowerCase(Locale.ROOT)
+                .replace("\\", "\\\\")
+                .replace("%", "\\%")
+                .replace("_", "\\_");
+        return "%" + escaped + "%";
     }
 
     private static boolean isBlank(String value) {

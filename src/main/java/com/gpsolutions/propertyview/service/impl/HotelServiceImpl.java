@@ -11,6 +11,7 @@ import com.gpsolutions.propertyview.mapper.HotelMapper;
 import com.gpsolutions.propertyview.repository.AmenityRepository;
 import com.gpsolutions.propertyview.repository.HotelRepository;
 import com.gpsolutions.propertyview.repository.spec.HotelSpecifications;
+import com.gpsolutions.propertyview.service.AmenityService;
 import com.gpsolutions.propertyview.service.HotelService;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -21,6 +22,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,7 @@ public class HotelServiceImpl implements HotelService {
 
     private final HotelRepository hotelRepository;
     private final AmenityRepository amenityRepository;
+    private final AmenityService amenityService;
     private final HotelMapper hotelMapper;
 
     @Override
@@ -95,11 +98,19 @@ public class HotelServiceImpl implements HotelService {
         for (String name : requested) {
             Amenity amenity = existing.get(name);
             if (amenity == null) {
-                amenity = amenityRepository.save(Amenity.builder().name(name).build());
+                amenity = resolveAmenity(name);
             }
             hotel.getAmenities().add(amenity);
         }
-        return hotelMapper.toDetail(hotelRepository.save(hotel));
+        return hotelMapper.toDetail(hotel);
+    }
+
+    private Amenity resolveAmenity(String name) {
+        try {
+            return amenityService.create(name);
+        } catch (DataIntegrityViolationException conflict) {
+            return amenityService.findByName(name).orElseThrow(() -> conflict);
+        }
     }
 
     private Hotel getHotel(Long id) {
