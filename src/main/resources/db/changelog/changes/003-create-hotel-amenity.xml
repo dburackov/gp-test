@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="003-create-hotel-amenity" author="dburackov">
+        <createTable tableName="hotel_amenity">
+            <column name="hotel_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amenity_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="hotel_amenity"
+                       columnNames="hotel_id, amenity_id"
+                       constraintName="pk_hotel_amenity"/>
+
+        <addForeignKeyConstraint baseTableName="hotel_amenity"
+                                 baseColumnNames="hotel_id"
+                                 constraintName="fk_hotel_amenity_hotel"
+                                 referencedTableName="hotel"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="hotel_amenity"
+                                 baseColumnNames="amenity_id"
+                                 constraintName="fk_hotel_amenity_amenity"
+                                 referencedTableName="amenity"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

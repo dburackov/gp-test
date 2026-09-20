@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="005-demo-data" author="dburackov" context="demo">
+        <insert tableName="hotel">
+            <column name="name" value="DoubleTree by Hilton Minsk"/>
+            <column name="description"
+                    value="The DoubleTree by Hilton Hotel Minsk offers 193 luxurious rooms in the Belorussian capital and stunning views of Minsk city from the hotel's 20th floor ..."/>
+            <column name="brand" value="Hilton"/>
+            <column name="house_number" valueNumeric="9"/>
+            <column name="street" value="Pobediteley Avenue"/>
+            <column name="city" value="Minsk"/>
+            <column name="country" value="Belarus"/>
+            <column name="post_code" value="220004"/>
+            <column name="phone" value="+375 17 309-80-00"/>
+            <column name="email" value="doubletreeminsk.info@hilton.com"/>
+            <column name="check_in" valueDate="14:00:00"/>
+            <column name="check_out" valueDate="12:00:00"/>
+        </insert>
+
+        <insert tableName="amenity">
+            <column name="name" value="Free parking"/>
+        </insert>
+        <insert tableName="amenity">
+            <column name="name" value="Free WiFi"/>
+        </insert>
+        <insert tableName="amenity">
+            <column name="name" value="Non-smoking rooms"/>
+        </insert>
+        <insert tableName="amenity">
+            <column name="name" value="Concierge"/>
+        </insert>
+        <insert tableName="amenity">
+            <column name="name" value="On-site restaurant"/>
+        </insert>
+        <insert tableName="amenity">
+            <column name="name" value="Fitness center"/>
+        </insert>
+        <insert tableName="amenity">
+            <column name="name" value="Pet-friendly rooms"/>
+        </insert>
+        <insert tableName="amenity">
+            <column name="name" value="Room service"/>
+        </insert>
+        <insert tableName="amenity">
+            <column name="name" value="Business center"/>
+        </insert>
+        <insert tableName="amenity">
+            <column name="name" value="Meeting rooms"/>
+        </insert>
+
+        <insert tableName="hotel_amenity">
+            <column name="hotel_id" valueComputed="(SELECT id FROM hotel WHERE name = 'DoubleTree by Hilton Minsk')"/>
+            <column name="amenity_id" valueComputed="(SELECT id FROM amenity WHERE name = 'Free parking')"/>
+        </insert>
+        <insert tableName="hotel_amenity">
+            <column name="hotel_id" valueComputed="(SELECT id FROM hotel WHERE name = 'DoubleTree by Hilton Minsk')"/>
+            <column name="amenity_id" valueComputed="(SELECT id FROM amenity WHERE name = 'Free WiFi')"/>
+        </insert>
+        <insert tableName="hotel_amenity">
+            <column name="hotel_id" valueComputed="(SELECT id FROM hotel WHERE name = 'DoubleTree by Hilton Minsk')"/>
+            <column name="amenity_id" valueComputed="(SELECT id FROM amenity WHERE name = 'Non-smoking rooms')"/>
+        </insert>
+        <insert tableName="hotel_amenity">
+            <column name="hotel_id" valueComputed="(SELECT id FROM hotel WHERE name = 'DoubleTree by Hilton Minsk')"/>
+            <column name="amenity_id" valueComputed="(SELECT id FROM amenity WHERE name = 'Concierge')"/>
+        </insert>
+        <insert tableName="hotel_amenity">
+            <column name="hotel_id" valueComputed="(SELECT id FROM hotel WHERE name = 'DoubleTree by Hilton Minsk')"/>
+            <column name="amenity_id" valueComputed="(SELECT id FROM amenity WHERE name = 'On-site restaurant')"/>
+        </insert>
+        <insert tableName="hotel_amenity">
+            <column name="hotel_id" valueComputed="(SELECT id FROM hotel WHERE name = 'DoubleTree by Hilton Minsk')"/>
+            <column name="amenity_id" valueComputed="(SELECT id FROM amenity WHERE name = 'Fitness center')"/>
+        </insert>
+        <insert tableName="hotel_amenity">
+            <column name="hotel_id" valueComputed="(SELECT id FROM hotel WHERE name = 'DoubleTree by Hilton Minsk')"/>
+            <column name="amenity_id" valueComputed="(SELECT id FROM amenity WHERE name = 'Pet-friendly rooms')"/>
+        </insert>
+        <insert tableName="hotel_amenity">
+            <column name="hotel_id" valueComputed="(SELECT id FROM hotel WHERE name = 'DoubleTree by Hilton Minsk')"/>
+            <column name="amenity_id" valueComputed="(SELECT id FROM amenity WHERE name = 'Room service')"/>
+        </insert>
+        <insert tableName="hotel_amenity">
+            <column name="hotel_id" valueComputed="(SELECT id FROM hotel WHERE name = 'DoubleTree by Hilton Minsk')"/>
+            <column name="amenity_id" valueComputed="(SELECT id FROM amenity WHERE name = 'Business center')"/>
+        </insert>
+        <insert tableName="hotel_amenity">
+            <column name="hotel_id" valueComputed="(SELECT id FROM hotel WHERE name = 'DoubleTree by Hilton Minsk')"/>
+            <column name="amenity_id" valueComputed="(SELECT id FROM amenity WHERE name = 'Meeting rooms')"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
