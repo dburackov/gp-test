@@ -1,5 +1,7 @@
 # Тестовое
 
+[![build](https://github.com/dburackov/gp-test/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/dburackov/gp-test/actions/workflows/build.yml)
+
 RESTful API для работы с отелями
 
 ## Запуск
@@ -12,7 +14,7 @@ mvn spring-boot:run
 
 ### Демо-данные
 
-По умолчанию база пустая. Отель из ТЗ лежит в отдельном Liquibase-changeset под контекстом demo:
+По умолчанию база пустая. Отель из ТЗ лежит в отдельном Liquibase-changeset под контекстом demo
 
 ## Документация API
 
