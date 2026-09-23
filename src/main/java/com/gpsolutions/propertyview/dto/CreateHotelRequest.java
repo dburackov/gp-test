@@ -2,14 +2,13 @@ package com.gpsolutions.propertyview.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record CreateHotelRequest(
 
         @Schema(example = "DoubleTree by Hilton Minsk")
-        @NotBlank
+        @NotNull
         @Size(max = 255)
         String name,
 
@@ -18,7 +17,7 @@ public record CreateHotelRequest(
         String description,
 
         @Schema(example = "Hilton")
-        @NotBlank
+        @NotNull
         @Size(max = 255)
         String brand,
 

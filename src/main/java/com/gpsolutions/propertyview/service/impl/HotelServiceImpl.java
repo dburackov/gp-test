@@ -56,9 +56,9 @@ public class HotelServiceImpl implements HotelService {
     public List<HotelSummaryResponse> search(HotelSearchCriteria criteria) {
         List<Specification<Hotel>> specifications = new ArrayList<>();
         specifications.add(HotelSpecifications.nameContains(criteria.name()));
-        specifications.add(HotelSpecifications.brandContains(criteria.brand()));
-        specifications.add(HotelSpecifications.cityContains(criteria.city()));
-        specifications.add(HotelSpecifications.countryContains(criteria.country()));
+        specifications.add(HotelSpecifications.brandEquals(criteria.brand()));
+        specifications.add(HotelSpecifications.cityEquals(criteria.city()));
+        specifications.add(HotelSpecifications.countryEquals(criteria.country()));
         if (criteria.amenities() != null) {
             criteria.amenities().stream()
                     .map(HotelSpecifications::hasAmenity)
@@ -84,14 +84,14 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     @Transactional
-    public HotelDetailResponse addAmenities(Long id, List<String> amenityNames) {
+    public HotelSummaryResponse addAmenities(Long id, List<String> amenityNames) {
         Hotel hotel = getHotel(id);
         Set<String> requested = amenityNames == null ? Set.of() : amenityNames.stream()
                 .filter(Objects::nonNull)
                 .filter(name -> !name.isBlank())
                 .collect(Collectors.toCollection(LinkedHashSet::new));
         if (requested.isEmpty()) {
-            return hotelMapper.toDetail(hotel);
+            return hotelMapper.toSummary(hotel);
         }
         Map<String, Amenity> existing = amenityRepository.findByNameIn(requested).stream()
                 .collect(Collectors.toMap(Amenity::getName, Function.identity()));
@@ -102,7 +102,7 @@ public class HotelServiceImpl implements HotelService {
             }
             hotel.getAmenities().add(amenity);
         }
-        return hotelMapper.toDetail(hotel);
+        return hotelMapper.toSummary(hotel);
     }
 
     private Amenity resolveAmenity(String name) {

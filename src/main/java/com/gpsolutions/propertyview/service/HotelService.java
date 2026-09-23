@@ -16,5 +16,5 @@ public interface HotelService {
 
     HotelSummaryResponse create(CreateHotelRequest request);
 
-    HotelDetailResponse addAmenities(Long id, List<String> amenityNames);
+    HotelSummaryResponse addAmenities(Long id, List<String> amenityNames);
 }

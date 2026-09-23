@@ -9,19 +9,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequiredArgsConstructor
@@ -59,24 +55,19 @@ public class HotelController {
 
     @PostMapping("/hotels")
     @Operation(summary = "Создание нового отеля")
-    @ApiResponse(responseCode = "201", description = "Отель создан")
+    @ApiResponse(responseCode = "200", description = "Отель создан")
     @ApiResponse(responseCode = "400", description = "Ошибка валидации", content = @io.swagger.v3.oas.annotations.media.Content)
-    public ResponseEntity<HotelSummaryResponse> create(@Valid @RequestBody CreateHotelRequest request) {
-        HotelSummaryResponse created = hotelService.create(request);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(created.id())
-                .toUri();
-        return ResponseEntity.created(location).body(created);
+    public HotelSummaryResponse create(@Valid @RequestBody CreateHotelRequest request) {
+        return hotelService.create(request);
     }
 
     @PostMapping("/hotels/{id}/amenities")
     @Operation(summary = "Добавление списка amenities к отелю")
-    @ApiResponse(responseCode = "200", description = "Обновлённая карточка отеля")
+    @ApiResponse(responseCode = "200", description = "Краткая информация об отеле")
     @ApiResponse(responseCode = "404", description = "Отель не найден", content = @io.swagger.v3.oas.annotations.media.Content)
-    public HotelDetailResponse addAmenities(
+    public HotelSummaryResponse addAmenities(
             @PathVariable Long id,
-            @RequestBody List<@NotBlank @Size(max = 255) String> amenities) {
+            @RequestBody List<@Size(max = 255) String> amenities) {
         return hotelService.addAmenities(id, amenities);
     }
 }

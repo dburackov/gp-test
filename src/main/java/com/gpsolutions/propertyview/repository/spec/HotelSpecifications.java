@@ -20,30 +20,30 @@ public final class HotelSpecifications {
         return contains(value, root -> root.get("name"));
     }
 
-    public static Specification<Hotel> brandContains(String value) {
-        return contains(value, root -> root.get("brand"));
+    public static Specification<Hotel> brandEquals(String value) {
+        return equalsIgnoreCase(value, root -> root.get("brand"));
     }
 
-    public static Specification<Hotel> cityContains(String value) {
-        return contains(value, root -> root.get("address").get("city"));
+    public static Specification<Hotel> cityEquals(String value) {
+        return equalsIgnoreCase(value, root -> root.get("address").get("city"));
     }
 
-    public static Specification<Hotel> countryContains(String value) {
-        return contains(value, root -> root.get("address").get("country"));
+    public static Specification<Hotel> countryEquals(String value) {
+        return equalsIgnoreCase(value, root -> root.get("address").get("country"));
     }
 
     public static Specification<Hotel> hasAmenity(String value) {
         if (isBlank(value)) {
             return null;
         }
-        String pattern = toPattern(value);
+        String normalized = normalize(value);
         return (root, query, builder) -> {
             Subquery<Integer> subquery = query.subquery(Integer.class);
             Root<Hotel> hotel = subquery.from(Hotel.class);
             Join<Hotel, Amenity> amenity = hotel.join("amenities");
             subquery.select(builder.literal(1))
                     .where(builder.equal(hotel.get("id"), root.get("id")),
-                            builder.like(builder.lower(amenity.get("name")), pattern, ESCAPE_CHAR));
+                            builder.equal(builder.lower(amenity.get("name")), normalized));
             return builder.exists(subquery);
         };
     }
@@ -57,12 +57,25 @@ public final class HotelSpecifications {
                 builder.like(builder.lower(resolver.resolve(root)), pattern, ESCAPE_CHAR);
     }
 
+    private static Specification<Hotel> equalsIgnoreCase(String value, PathResolver resolver) {
+        if (isBlank(value)) {
+            return null;
+        }
+        String normalized = normalize(value);
+        return (root, query, builder) ->
+                builder.equal(builder.lower(resolver.resolve(root)), normalized);
+    }
+
     private static String toPattern(String value) {
-        String escaped = value.trim().toLowerCase(Locale.ROOT)
+        String escaped = normalize(value)
                 .replace("\\", "\\\\")
                 .replace("%", "\\%")
                 .replace("_", "\\_");
         return "%" + escaped + "%";
+    }
+
+    private static String normalize(String value) {
+        return value.trim().toLowerCase(Locale.ROOT);
     }
 
     private static boolean isBlank(String value) {
